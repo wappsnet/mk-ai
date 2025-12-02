@@ -20,16 +20,24 @@ if %ERRORLEVEL% NEQ 0 (
 node --version
 echo Node.js is installed
 
-REM Check if npm is installed
-where npm >nul 2>nul
+REM Check if Yarn is installed
+where yarn >nul 2>nul
 if %ERRORLEVEL% NEQ 0 (
-    echo Error: npm is not installed.
-    pause
-    exit /b 1
+    echo Warning: Yarn is not installed.
+    echo Installing Yarn globally via npm...
+    call npm install -g yarn
+    if %ERRORLEVEL% EQU 0 (
+        yarn --version
+        echo Yarn installed successfully
+    ) else (
+        echo Error installing Yarn
+        pause
+        exit /b 1
+    )
+) else (
+    yarn --version
+    echo Yarn is installed
 )
-
-npm --version
-echo npm is installed
 
 REM Check if MySQL is installed
 where mysql >nul 2>nul
@@ -52,7 +60,7 @@ echo.
 cd backend
 
 echo Installing backend dependencies...
-call npm install
+call yarn install
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error installing backend dependencies
@@ -84,7 +92,7 @@ echo.
 set /p init_db="Initialize database now? (y/n): "
 if /i "%init_db%"=="y" (
     echo Initializing database...
-    call npm run init-db
+    call yarn init-db
     if %ERRORLEVEL% EQU 0 (
         echo Database initialized successfully
     ) else (
@@ -103,7 +111,7 @@ echo.
 cd frontend
 
 echo Installing frontend dependencies...
-call npm install
+call yarn install
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error installing frontend dependencies
@@ -124,19 +132,20 @@ echo To start the application:
 echo.
 echo Terminal 1 (Backend):
 echo   cd backend
-echo   npm run dev
+echo   yarn dev
 echo.
 echo Terminal 2 (Frontend):
 echo   cd frontend
-echo   npm run dev
+echo   yarn dev
 echo.
 echo Then open http://localhost:3000 in your browser
 echo.
 echo Next steps:
-echo 1. Go to Settings page
-echo 2. Add at least one AI provider with API key
-echo 3. Mark one provider as 'Verifier'
-echo 4. Start chatting!
+echo 1. Register/Login to create your account
+echo 2. Go to Settings page
+echo 3. Add at least one AI provider with API key
+echo 4. Mark one provider as 'Verifier'
+echo 5. Start chatting!
 echo.
 echo For detailed instructions, see QUICKSTART.md
 echo.

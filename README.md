@@ -2,6 +2,8 @@
 
 A full-stack application that allows users to interact with multiple AI providers simultaneously, compare their responses, and get an AI-powered verification to determine the best answer.
 
+> **📦 Package Manager**: This project uses **Yarn** for package management. See [YARN.md](YARN.md) for Yarn-specific commands and best practices. All commands in this README use Yarn.
+
 ## Features
 
 - **Multi-AI Chat Interface**: Send prompts to multiple AI providers at once
@@ -55,7 +57,7 @@ ai-verifier/
 
 - Node.js (v16 or higher)
 - MySQL (v8 or higher)
-- npm or yarn package manager
+- Yarn package manager (will be auto-installed by setup script if not present)
 
 ## Installation
 
@@ -81,7 +83,7 @@ CREATE DATABASE ai_verifier;
 cd backend
 
 # Install dependencies
-npm install
+yarn install
 
 # Create environment configuration
 cp .env.example .env
@@ -109,13 +111,13 @@ VERIFIER_AI_MODEL=gpt-4
 Initialize the database:
 
 ```bash
-npm run init-db
+yarn init-db
 ```
 
 Start the backend server:
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 The backend will run on `http://localhost:3001`
@@ -128,10 +130,10 @@ Open a new terminal window:
 cd frontend
 
 # Install dependencies
-npm install
+yarn install
 
 # Start the development server
-npm run dev
+yarn dev
 ```
 
 The frontend will run on `http://localhost:3000`
@@ -234,14 +236,14 @@ See `backend/src/config/initDb.js` for detailed schema.
 
 ```bash
 cd backend
-npm run dev  # Starts with nodemon for auto-reload
+yarn dev  # Starts with nodemon for auto-reload
 ```
 
 ### Frontend Development
 
 ```bash
 cd frontend
-npm run dev  # Starts Vite dev server with HMR
+yarn dev  # Starts Vite dev server with HMR
 ```
 
 ### Building for Production
@@ -249,14 +251,14 @@ npm run dev  # Starts Vite dev server with HMR
 **Backend:**
 ```bash
 cd backend
-npm start
+yarn start
 ```
 
 **Frontend:**
 ```bash
 cd frontend
-npm run build
-npm run preview
+yarn build
+yarn preview
 ```
 
 ## Troubleshooting

@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "AI Verifier - Compare and verify responses from multiple AI providers",
   "scripts": {
-    "setup": "npm install --prefix backend && npm install --prefix frontend",
-    "init-db": "cd backend && npm run init-db",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm run preview"
+    "setup": "cd backend && yarn install && cd ../frontend && yarn install",
+    "init-db": "cd backend && yarn init-db",
+    "dev": "concurrently \"yarn dev:backend\" \"yarn dev:frontend\"",
+    "dev:backend": "cd backend && yarn dev",
+    "dev:frontend": "cd frontend && yarn dev",
+    "start": "concurrently \"yarn start:backend\" \"yarn start:frontend\"",
+    "start:backend": "cd backend && yarn start",
+    "start:frontend": "cd frontend && yarn preview"
   },
   "keywords": ["ai", "verifier", "comparison", "openai", "anthropic"],
   "author": "",

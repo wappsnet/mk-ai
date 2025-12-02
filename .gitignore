@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 package-lock.json
-yarn.lock
+# yarn.lock is kept in version control for consistency
 
 # Environment variables
 .env

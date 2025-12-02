@@ -26,13 +26,15 @@ fi
 
 echo -e "${GREEN}✓ Node.js is installed: $(node --version)${NC}"
 
-# Check if npm is installed
-if ! command -v npm &> /dev/null; then
-    echo -e "${RED}Error: npm is not installed.${NC}"
-    exit 1
+# Check if Yarn is installed
+if ! command -v yarn &> /dev/null; then
+    echo -e "${YELLOW}⚠ Warning: Yarn is not installed.${NC}"
+    echo "Installing Yarn globally via npm..."
+    npm install -g yarn
+    echo -e "${GREEN}✓ Yarn installed: $(yarn --version)${NC}"
+else
+    echo -e "${GREEN}✓ Yarn is installed: $(yarn --version)${NC}"
 fi
-
-echo -e "${GREEN}✓ npm is installed: $(npm --version)${NC}"
 
 # Check if MySQL is installed
 if ! command -v mysql &> /dev/null; then
@@ -58,7 +60,7 @@ echo ""
 cd backend
 
 echo "Installing backend dependencies..."
-npm install
+yarn install
 
 echo ""
 echo -e "${GREEN}✓ Backend dependencies installed${NC}"
@@ -91,7 +93,7 @@ read -p "Initialize database now? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Initializing database..."
-    npm run init-db
+    yarn init-db
     echo -e "${GREEN}✓ Database initialized${NC}"
 fi
 
@@ -107,7 +109,7 @@ echo ""
 cd frontend
 
 echo "Installing frontend dependencies..."
-npm install
+yarn install
 
 echo ""
 echo -e "${GREEN}✓ Frontend dependencies installed${NC}"
@@ -123,19 +125,20 @@ echo "To start the application:"
 echo ""
 echo -e "${GREEN}Terminal 1 (Backend):${NC}"
 echo "  cd backend"
-echo "  npm run dev"
+echo "  yarn dev"
 echo ""
 echo -e "${GREEN}Terminal 2 (Frontend):${NC}"
 echo "  cd frontend"
-echo "  npm run dev"
+echo "  yarn dev"
 echo ""
 echo "Then open http://localhost:3000 in your browser"
 echo ""
 echo "Next steps:"
-echo "1. Go to Settings page"
-echo "2. Add at least one AI provider with API key"
-echo "3. Mark one provider as 'Verifier'"
-echo "4. Start chatting!"
+echo "1. Register/Login to create your account"
+echo "2. Go to Settings page"
+echo "3. Add at least one AI provider with API key"
+echo "4. Mark one provider as 'Verifier'"
+echo "5. Start chatting!"
 echo ""
 echo "For detailed instructions, see QUICKSTART.md"
 echo ""
