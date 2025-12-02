@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import type { MouseEvent } from 'react';
 import {
   Layout,
   Card,
@@ -91,7 +92,7 @@ function ChatPage() {
     try {
       const response = await chatsAPI.getAll();
       setChats(response.data);
-    } catch (error) {
+    } catch {
       message.error('Failed to load chats');
     }
   };
@@ -100,7 +101,7 @@ function ChatPage() {
     try {
       const response = await aiProvidersAPI.getActive();
       setProviders(response.data);
-    } catch (error) {
+    } catch {
       message.error('Failed to load AI providers');
     }
   };
@@ -135,7 +136,7 @@ function ChatPage() {
     }
   };
 
-  const deleteChat = async (chatId: number, e: React.MouseEvent) => {
+  const deleteChat = async (chatId: number, e: MouseEvent) => {
     e.stopPropagation();
     try {
       await chatsAPI.delete(chatId);
@@ -320,18 +321,23 @@ function ChatPage() {
                 borderRadius: '8px'
               }}
             >
-              {loading ? (
+              {loading && (
                 <div style={{ textAlign: 'center', padding: '50px' }}>
                   <Spin size="large" />
                 </div>
-              ) : messages.length === 0 ? (
+              )}
+
+                {messages.length === 0 ? (
                 <Empty description="No messages yet. Start chatting!" />
               ) : (
                 messages.map((msg) => (
                   <div key={msg.id} style={{ marginBottom: 24 }}>
                     <Card
                       style={{ marginBottom: 16 }}
-                      bodyStyle={{ padding: '12px 16px' }}
+                      styles={{ body: {
+                          padding: '12px 16px'
+                      }
+                    }}
                     >
                       <Space>
                         <UserOutlined />
