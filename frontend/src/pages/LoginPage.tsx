@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { Form, Input, Button, Card, message, Typography } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
 
 const { Title, Text } = Typography;
 
-function RegisterPage() {
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const { register, isAuthenticated } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   // If already authenticated, redirect to home
@@ -16,12 +21,12 @@ function RegisterPage() {
     return <Navigate to="/" replace />;
   }
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: LoginFormValues) => {
     setLoading(true);
-    const result = await register(values.name, values.email, values.password);
+    const result = await login(values.email, values.password);
 
     if (result.success) {
-      message.success('Registration successful!');
+      message.success('Login successful!');
       navigate('/');
     } else {
       message.error(result.error);
@@ -41,26 +46,15 @@ function RegisterPage() {
       <Card style={{ width: 400, boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <Title level={2}>AI Verifier</Title>
-          <Text type="secondary">Create your account</Text>
+          <Text type="secondary">Sign in to your account</Text>
         </div>
 
         <Form
-          name="register"
+          name="login"
           onFinish={onFinish}
           layout="vertical"
           autoComplete="off"
         >
-          <Form.Item
-            name="name"
-            rules={[{ required: true, message: 'Please enter your name' }]}
-          >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder="Full Name"
-              size="large"
-            />
-          </Form.Item>
-
           <Form.Item
             name="email"
             rules={[
@@ -69,7 +63,7 @@ function RegisterPage() {
             ]}
           >
             <Input
-              prefix={<MailOutlined />}
+              prefix={<UserOutlined />}
               placeholder="Email"
               size="large"
             />
@@ -77,36 +71,11 @@ function RegisterPage() {
 
           <Form.Item
             name="password"
-            rules={[
-              { required: true, message: 'Please enter a password' },
-              { min: 6, message: 'Password must be at least 6 characters' }
-            ]}
+            rules={[{ required: true, message: 'Please enter your password' }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
               placeholder="Password"
-              size="large"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="confirmPassword"
-            dependencies={['password']}
-            rules={[
-              { required: true, message: 'Please confirm your password' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error('Passwords do not match'));
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Confirm Password"
               size="large"
             />
           </Form.Item>
@@ -119,13 +88,13 @@ function RegisterPage() {
               block
               size="large"
             >
-              Sign Up
+              Sign In
             </Button>
           </Form.Item>
 
           <div style={{ textAlign: 'center' }}>
-            <Text>Already have an account? </Text>
-            <Link to="/login">Sign in</Link>
+            <Text>Don't have an account? </Text>
+            <Link to="/register">Sign up now</Link>
           </div>
         </Form>
       </Card>
@@ -133,4 +102,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage;
+export default LoginPage;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Layout,
   Card,
@@ -11,7 +11,6 @@ import {
   message,
   Empty,
   Tag,
-  Divider,
   Alert,
   Collapse
 } from 'antd';
@@ -21,25 +20,53 @@ import {
   DeleteOutlined,
   RobotOutlined,
   UserOutlined,
-  CheckCircleOutlined,
   CloseCircleOutlined,
   StarOutlined
 } from '@ant-design/icons';
-import { chatsAPI, aiProvidersAPI } from '../services/api';
+import { chatsAPI, aiProvidersAPI, Chat, AIProvider } from '../services/api';
 
 const { Sider, Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
 
+interface Provider {
+  id: number;
+  name: string;
+  provider_type: string;
+  is_verifier: boolean;
+}
+
+interface Response {
+  id: number;
+  provider: Provider;
+  status: 'success' | 'error';
+  text?: string;
+  error_message?: string;
+  response_time: number;
+}
+
+interface Verification {
+  summary: string;
+  best_response_id?: number;
+  reasoning?: string;
+}
+
+interface ChatMessage {
+  id: number;
+  content: string;
+  responses: Response[];
+  verification?: Verification;
+}
+
 function ChatPage() {
-  const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
-  const [providers, setProviders] = useState([]);
-  const messagesEndRef = useRef(null);
+  const [providers, setProviders] = useState<AIProvider[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadChats();
@@ -78,12 +105,12 @@ function ChatPage() {
     }
   };
 
-  const loadMessages = async (chatId) => {
+  const loadMessages = async (chatId: number) => {
     setLoading(true);
     try {
       const response = await chatsAPI.getMessages(chatId);
-      setMessages(response.data);
-    } catch (error) {
+      setMessages(response.data as ChatMessage[]);
+    } catch {
       message.error('Failed to load messages');
     } finally {
       setLoading(false);
@@ -95,14 +122,20 @@ function ChatPage() {
       const timestamp = new Date().toLocaleString();
       const response = await chatsAPI.create(`New Chat - ${timestamp}`);
       await loadChats();
-      const newChat = { id: response.data.id, title: `New Chat - ${timestamp}` };
+      const newChat: Chat = {
+        id: response.data.id,
+        title: `New Chat - ${timestamp}`,
+        user_id: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
       setSelectedChat(newChat);
-    } catch (error) {
+    } catch {
       message.error('Failed to create chat');
     }
   };
 
-  const deleteChat = async (chatId, e) => {
+  const deleteChat = async (chatId: number, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
       await chatsAPI.delete(chatId);
@@ -112,7 +145,7 @@ function ChatPage() {
       }
       await loadChats();
       message.success('Chat deleted');
-    } catch (error) {
+    } catch {
       message.error('Failed to delete chat');
     }
   };
@@ -138,14 +171,14 @@ function ChatPage() {
       await chatsAPI.sendMessage(selectedChat.id, inputMessage);
       setInputMessage('');
       await loadMessages(selectedChat.id);
-    } catch (error) {
+    } catch {
       message.error('Failed to send message');
     } finally {
       setSending(false);
     }
   };
 
-  const renderResponse = (response) => {
+  const renderResponse = (response: Response) => {
     if (response.status === 'error') {
       return (
         <Alert
@@ -177,7 +210,7 @@ function ChatPage() {
     );
   };
 
-  const renderVerification = (verification, responses) => {
+  const renderVerification = (verification: Verification | undefined, responses: Response[]) => {
     if (!verification) return null;
 
     const bestResponse = responses.find(r => r.id === verification.best_response_id);

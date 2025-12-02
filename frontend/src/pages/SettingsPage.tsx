@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   Table,
@@ -14,6 +14,7 @@ import {
   Tag,
   Popconfirm
 } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import {
   PlusOutlined,
   EditOutlined,
@@ -21,16 +22,27 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined
 } from '@ant-design/icons';
-import { aiProvidersAPI } from '../services/api';
+import { aiProvidersAPI, AIProvider } from '../services/api';
+import { AxiosError } from 'axios';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
+interface ProviderFormValues {
+  name: string;
+  provider_type: string;
+  api_key?: string;
+  model?: string;
+  base_url?: string;
+  is_verifier: boolean;
+  is_active: boolean;
+}
+
 function SettingsPage() {
-  const [providers, setProviders] = useState([]);
+  const [providers, setProviders] = useState<AIProvider[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [editingProvider, setEditingProvider] = useState(null);
+  const [editingProvider, setEditingProvider] = useState<AIProvider | null>(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -55,7 +67,7 @@ function SettingsPage() {
     setModalVisible(true);
   };
 
-  const showEditModal = (provider) => {
+  const showEditModal = (provider: AIProvider) => {
     setEditingProvider(provider);
     form.setFieldsValue({
       name: provider.name,
@@ -68,7 +80,7 @@ function SettingsPage() {
     setModalVisible(true);
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: ProviderFormValues) => {
     try {
       if (editingProvider) {
         // Don't send api_key if it's '***'
@@ -86,11 +98,12 @@ function SettingsPage() {
       form.resetFields();
       loadProviders();
     } catch (error) {
-      message.error(error.response?.data?.error || 'Failed to save AI provider');
+      const axiosError = error as AxiosError<{ error: string }>;
+      message.error(axiosError.response?.data?.error || 'Failed to save AI provider');
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     try {
       await aiProvidersAPI.delete(id);
       message.success('AI provider deleted successfully');
@@ -100,7 +113,7 @@ function SettingsPage() {
     }
   };
 
-  const handleToggleActive = async (id, isActive) => {
+  const handleToggleActive = async (id: number, isActive: boolean) => {
     try {
       await aiProvidersAPI.setActive(id, isActive);
       message.success(`Provider ${isActive ? 'activated' : 'deactivated'}`);
@@ -110,18 +123,18 @@ function SettingsPage() {
     }
   };
 
-  const columns = [
+  const columns: ColumnsType<AIProvider> = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <Text strong>{text}</Text>
+      render: (text: string) => <Text strong>{text}</Text>
     },
     {
       title: 'Type',
       dataIndex: 'provider_type',
       key: 'provider_type',
-      render: (type) => <Tag color="blue">{type}</Tag>
+      render: (type: string) => <Tag color="blue">{type}</Tag>
     },
     {
       title: 'Model',
@@ -132,7 +145,7 @@ function SettingsPage() {
       title: 'Role',
       dataIndex: 'is_verifier',
       key: 'is_verifier',
-      render: (isVerifier) => (
+      render: (isVerifier: boolean) => (
         <Tag color={isVerifier ? 'gold' : 'green'}>
           {isVerifier ? 'Verifier' : 'Provider'}
         </Tag>
@@ -142,7 +155,7 @@ function SettingsPage() {
       title: 'Status',
       dataIndex: 'is_active',
       key: 'is_active',
-      render: (isActive, record) => (
+      render: (isActive: boolean, record: AIProvider) => (
         <Switch
           checked={isActive}
           onChange={(checked) => handleToggleActive(record.id, checked)}
@@ -154,7 +167,7 @@ function SettingsPage() {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, record) => (
+      render: (_: any, record: AIProvider) => (
         <Space>
           <Button
             type="link"

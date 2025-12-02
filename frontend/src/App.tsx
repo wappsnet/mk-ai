@@ -1,6 +1,5 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Button, Dropdown, Avatar } from 'antd';
+import { Layout, Menu, Dropdown, Avatar } from 'antd';
 import { MessageOutlined, SettingOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
