@@ -1,0 +1,48 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="light-gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e0e0e0;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="light-gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#light-gradient2)"/>
+
+  <!-- Main shield -->
+  <path d="M 100 30 L 130 45 L 130 85 Q 130 115 100 135 Q 70 115 70 85 L 70 45 Z"
+        fill="url(#light-gradient1)"
+        stroke="#667eea"
+        stroke-width="2"/>
+
+  <!-- Checkmark -->
+  <path d="M 85 80 L 95 90 L 115 65"
+        fill="none"
+        stroke="#667eea"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Neural network nodes -->
+  <circle cx="40" cy="100" r="8" fill="#667eea" opacity="0.6"/>
+  <circle cx="30" cy="80" r="6" fill="#667eea" opacity="0.4"/>
+  <circle cx="30" cy="120" r="6" fill="#667eea" opacity="0.4"/>
+
+  <circle cx="160" cy="100" r="8" fill="#764ba2" opacity="0.6"/>
+  <circle cx="170" cy="80" r="6" fill="#764ba2" opacity="0.4"/>
+  <circle cx="170" cy="120" r="6" fill="#764ba2" opacity="0.4"/>
+
+  <!-- Connection lines -->
+  <line x1="40" y1="100" x2="70" y2="85" stroke="#667eea" stroke-width="2" opacity="0.3"/>
+  <line x1="30" y1="80" x2="70" y2="70" stroke="#667eea" stroke-width="1.5" opacity="0.3"/>
+  <line x1="30" y1="120" x2="70" y2="95" stroke="#667eea" stroke-width="1.5" opacity="0.3"/>
+
+  <line x1="160" y1="100" x2="130" y2="85" stroke="#764ba2" stroke-width="2" opacity="0.3"/>
+  <line x1="170" y1="80" x2="130" y2="70" stroke="#764ba2" stroke-width="1.5" opacity="0.3"/>
+  <line x1="170" y1="120" x2="130" y2="95" stroke="#764ba2" stroke-width="1.5" opacity="0.3"/>
+</svg>
