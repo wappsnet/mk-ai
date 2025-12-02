@@ -1,12 +1,8 @@
 # Dependencies
 node_modules
-**/node_modules
 
 # Build outputs
 dist
-build
-**/dist
-**/build
 
 # Logs
 *.log
@@ -17,7 +13,6 @@ build
 .env.*.local
 
 # IDE
-.vscode
 .idea
 
 # Git
@@ -31,7 +26,6 @@ build
 .yarn
 .pnp.*
 yarn.lock
-**/yarn.lock
 
 # Package manager
 package-lock.json
@@ -42,5 +36,4 @@ coverage
 .nyc_output
 
 # Misc
-*.min.js
 *.min.css
