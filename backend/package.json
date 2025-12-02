@@ -1,0 +1,26 @@
+{
+  "name": "ai-verifier-backend",
+  "version": "1.0.0",
+  "description": "AI Verifier Backend - Compare and verify responses from multiple AI providers",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "init-db": "node src/config/initDb.js"
+  },
+  "keywords": ["ai", "verifier", "comparison"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.2",
+    "body-parser": "^1.20.2",
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
