@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const ChatController = require('../controllers/chatController');
+const { authenticate } = require('../middleware/auth');
+
+// All routes require authentication
+router.use(authenticate);
 
 router.post('/', ChatController.create);
 router.get('/', ChatController.getAll);

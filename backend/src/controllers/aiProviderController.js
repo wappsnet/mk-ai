@@ -12,6 +12,7 @@ class AIProviderController {
       }
 
       const id = await AIProvider.create({
+        user_id: req.user.id,
         name,
         provider_type,
         api_key,
@@ -32,7 +33,7 @@ class AIProviderController {
 
   static async getAll(req, res) {
     try {
-      const providers = await AIProvider.getAll();
+      const providers = await AIProvider.getAllByUserId(req.user.id);
 
       // Hide API keys in the response
       const sanitizedProviders = providers.map(p => ({
@@ -49,7 +50,7 @@ class AIProviderController {
 
   static async getActive(req, res) {
     try {
-      const providers = await AIProvider.getActive();
+      const providers = await AIProvider.getActiveByUserId(req.user.id);
 
       // Hide API keys in the response
       const sanitizedProviders = providers.map(p => ({
@@ -69,7 +70,7 @@ class AIProviderController {
       const { id } = req.params;
       const updates = req.body;
 
-      const affectedRows = await AIProvider.update(id, updates);
+      const affectedRows = await AIProvider.update(id, req.user.id, updates);
 
       if (affectedRows === 0) {
         return res.status(404).json({ error: 'AI provider not found' });
@@ -86,7 +87,7 @@ class AIProviderController {
     try {
       const { id } = req.params;
 
-      const affectedRows = await AIProvider.delete(id);
+      const affectedRows = await AIProvider.delete(id, req.user.id);
 
       if (affectedRows === 0) {
         return res.status(404).json({ error: 'AI provider not found' });
@@ -104,7 +105,7 @@ class AIProviderController {
       const { id } = req.params;
       const { is_active } = req.body;
 
-      const affectedRows = await AIProvider.setActive(id, is_active);
+      const affectedRows = await AIProvider.setActive(id, req.user.id, is_active);
 
       if (affectedRows === 0) {
         return res.status(404).json({ error: 'AI provider not found' });

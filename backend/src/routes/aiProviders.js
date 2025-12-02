@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const AIProviderController = require('../controllers/aiProviderController');
+const { authenticate } = require('../middleware/auth');
+
+// All routes require authentication
+router.use(authenticate);
 
 router.post('/', AIProviderController.create);
 router.get('/', AIProviderController.getAll);

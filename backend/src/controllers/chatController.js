@@ -14,7 +14,7 @@ class ChatController {
         return res.status(400).json({ error: 'Title is required' });
       }
 
-      const id = await Chat.create(title);
+      const id = await Chat.create(req.user.id, title);
 
       res.status(201).json({
         id,
@@ -28,7 +28,7 @@ class ChatController {
 
   static async getAll(req, res) {
     try {
-      const chats = await Chat.getAll();
+      const chats = await Chat.getAllByUserId(req.user.id);
       res.json(chats);
     } catch (error) {
       console.error('Error fetching chats:', error);
@@ -39,7 +39,7 @@ class ChatController {
   static async getById(req, res) {
     try {
       const { id } = req.params;
-      const chat = await Chat.getById(id);
+      const chat = await Chat.getById(id, req.user.id);
 
       if (!chat) {
         return res.status(404).json({ error: 'Chat not found' });
@@ -55,7 +55,7 @@ class ChatController {
   static async getMessages(req, res) {
     try {
       const { id } = req.params;
-      const messages = await Chat.getMessagesWithResponses(id);
+      const messages = await Chat.getMessagesWithResponses(id, req.user.id);
 
       res.json(messages);
     } catch (error) {
@@ -73,8 +73,8 @@ class ChatController {
         return res.status(400).json({ error: 'Message content is required' });
       }
 
-      // Verify chat exists
-      const chat = await Chat.getById(id);
+      // Verify chat exists and belongs to user
+      const chat = await Chat.getById(id, req.user.id);
       if (!chat) {
         return res.status(404).json({ error: 'Chat not found' });
       }
@@ -82,8 +82,8 @@ class ChatController {
       // Create message
       const messageId = await Message.create(id, content, 'user');
 
-      // Get all active AI providers
-      const providers = await AIProvider.getActive();
+      // Get all active AI providers for this user
+      const providers = await AIProvider.getActiveByUserId(req.user.id);
 
       if (providers.length === 0) {
         return res.status(400).json({
@@ -145,8 +145,8 @@ class ChatController {
       let verification = null;
 
       if (successfulResponses.length > 0) {
-        // Get verifier AI
-        const verifierProvider = await AIProvider.getVerifier();
+        // Get verifier AI for this user
+        const verifierProvider = await AIProvider.getVerifierByUserId(req.user.id);
 
         if (verifierProvider) {
           try {
@@ -201,7 +201,7 @@ class ChatController {
         return res.status(400).json({ error: 'Title is required' });
       }
 
-      const affectedRows = await Chat.update(id, title);
+      const affectedRows = await Chat.update(id, req.user.id, title);
 
       if (affectedRows === 0) {
         return res.status(404).json({ error: 'Chat not found' });
@@ -218,7 +218,7 @@ class ChatController {
     try {
       const { id } = req.params;
 
-      const affectedRows = await Chat.delete(id);
+      const affectedRows = await Chat.delete(id, req.user.id);
 
       if (affectedRows === 0) {
         return res.status(404).json({ error: 'Chat not found' });

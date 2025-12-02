@@ -1,38 +1,53 @@
 const db = require('../config/database');
 
 class Chat {
-  static async create(title) {
+  static async create(userId, title) {
     const [result] = await db.query(
-      'INSERT INTO chats (title) VALUES (?)',
-      [title]
+      'INSERT INTO chats (user_id, title) VALUES (?, ?)',
+      [userId, title]
     );
     return result.insertId;
   }
 
-  static async getAll() {
-    const [rows] = await db.query('SELECT * FROM chats ORDER BY updated_at DESC');
+  static async getAllByUserId(userId) {
+    const [rows] = await db.query(
+      'SELECT * FROM chats WHERE user_id = ? ORDER BY updated_at DESC',
+      [userId]
+    );
     return rows;
   }
 
-  static async getById(id) {
-    const [rows] = await db.query('SELECT * FROM chats WHERE id = ?', [id]);
+  static async getById(id, userId) {
+    const [rows] = await db.query(
+      'SELECT * FROM chats WHERE id = ? AND user_id = ?',
+      [id, userId]
+    );
     return rows[0];
   }
 
-  static async update(id, title) {
+  static async update(id, userId, title) {
     const [result] = await db.query(
-      'UPDATE chats SET title = ? WHERE id = ?',
-      [title, id]
+      'UPDATE chats SET title = ? WHERE id = ? AND user_id = ?',
+      [title, id, userId]
     );
     return result.affectedRows;
   }
 
-  static async delete(id) {
-    const [result] = await db.query('DELETE FROM chats WHERE id = ?', [id]);
+  static async delete(id, userId) {
+    const [result] = await db.query(
+      'DELETE FROM chats WHERE id = ? AND user_id = ?',
+      [id, userId]
+    );
     return result.affectedRows;
   }
 
-  static async getMessagesWithResponses(chatId) {
+  static async getMessagesWithResponses(chatId, userId) {
+    // First verify the chat belongs to the user
+    const chat = await this.getById(chatId, userId);
+    if (!chat) {
+      return [];
+    }
+
     const query = `
       SELECT
         m.id as message_id,
