@@ -1,6 +1,18 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { Layout, Menu, Dropdown, Avatar } from 'antd';
-import { MessageOutlined, SettingOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+  MessageOutlined,
+  SettingOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
@@ -25,8 +37,8 @@ function AppContent() {
       key: 'logout',
       icon: <LogoutOutlined />,
       label: 'Logout',
-      onClick: handleLogout
-    }
+      onClick: handleLogout,
+    },
   ];
 
   // Don't show header on login/register pages
@@ -35,15 +47,38 @@ function AppContent() {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       {showHeader && isAuthenticated && (
-        <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ color: 'white', fontSize: '20px', fontWeight: 'bold', marginRight: '50px' }}>
-              AI Verifier
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 12px',
+              }}
+            >
+              <img
+                src="/logo-icon.svg"
+                alt="AI Verifier"
+                style={{ width: '32px', height: '32px', marginRight: '12px' }}
+              />
+              <div
+                style={{ color: 'white', fontSize: '20px', fontWeight: 'bold' }}
+              >
+                AI Verifier
+              </div>
             </div>
             <Menu
               theme="dark"
               mode="horizontal"
-              selectedKeys={[location.pathname === '/settings' ? 'settings' : 'chat']}
+              selectedKeys={[
+                location.pathname === '/settings' ? 'settings' : 'chat',
+              ]}
               items={[
                 {
                   key: 'chat',
@@ -61,7 +96,14 @@ function AppContent() {
 
           {user && (
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-              <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', color: 'white' }}>
+              <div
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'white',
+                }}
+              >
                 <Avatar icon={<UserOutlined />} style={{ marginRight: 8 }} />
                 <span>{user.name}</span>
               </div>
